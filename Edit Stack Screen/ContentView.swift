@@ -7,11 +7,27 @@
 
 import SwiftUI
 
-
+class TextFieldManager: ObservableObject {
+    
+    let characterLimit = 25
+    
+    @Published var userInput = "" {
+        
+        didSet {
+            
+            if userInput.count > characterLimit {
+                userInput = String(userInput.prefix(characterLimit))
+            }
+        }
+    }
+    
+}
 
 
 
 struct ContentView: View {
+    
+    @ObservedObject var textFieldManager = TextFieldManager()
     @State private var text = ""
     
     var body: some View {
@@ -25,7 +41,7 @@ struct ContentView: View {
                     Rectangle()
                         .fill(Color(UIColor.systemTeal))
                         .frame(height: 66)
-                    CustomTextEditor.init(placeholder: "Stack name", text: $text)
+                    CustomTextEditor.init(placeholder: "Stack name", text: $textFieldManager.userInput)
                         .multilineTextAlignment(TextAlignment.leading)
                         .frame(height: 66)
                 }
